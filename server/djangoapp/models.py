@@ -28,11 +28,13 @@ class CarModel(models.Model):
     SUV = 'SUV'
     WAGON = 'Wagon'
     COUPE = 'Coupe'
+    TRUCK = 'Truck'
     MODEL_TYPES = [
         (SEDAN, 'Sedan'),
         (SUV, 'SUV'),
         (WAGON, 'Wagon'),
-        (COUPE, 'Coupe')
+        (COUPE, 'Coupe'),
+        (TRUCK, 'Truck')
     ]
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(null=False, max_length=50, default='car model')
@@ -48,9 +50,11 @@ class CarModel(models.Model):
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer:
 
-    def __init__(self, address, city, id, lat, long, st, zip):
+    def __init__(self, address, city, full_name, short_name, id, lat, long, st, zip):
         self.address = address
         self.city = city
+        self.full_name = full_name
+        self.short_name = short_name
         self.id = id
         self.lat = lat
         self.long = long

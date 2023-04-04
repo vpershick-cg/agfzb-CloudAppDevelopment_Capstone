@@ -1,0 +1,156 @@
+This is a copy of external functions created for the lab.
+1. get-dealership
+2. get-review
+3. post-review 
+
+
+/** 1. get-dealership 
+  *
+  * main() will be run when you invoke this action
+  *
+  * @param Cloud Functions actions accept a single parameter, which must be a JSON object.
+  *
+  * @return The output of this action, which must be a JSON object.
+  *
+  */
+function main(params) {
+    // console.log(params);
+    return new Promise(function (resolve, reject) {
+        const { CloudantV1 } = require('@ibm-cloud/cloudant');
+        const { IamAuthenticator } = require('ibm-cloud-sdk-core');
+        const authenticator = new IamAuthenticator({ apikey: 'J2RjLy7u1b3GXBN60vBfhG3GGlMDLBw3JPcLkmWwhw8w' })
+        const cloudant = CloudantV1.newInstance({
+            authenticator: authenticator
+        });
+        cloudant.setServiceUrl('https://apikey-v2-22twxdon1t9319iaw6qgrevfeeiwmhm9vdwa9msdqq4j:db5288361fe28be9b9d1d707f89e4fad@06013879-1f24-48e4-b698-e8af212d2691-bluemix.cloudantnosqldb.appdomain.cloud');
+        if (params.st) {
+            // return dealership with this State 
+            cloudant.postFind({db:'dealerships',selector:{st:params.st}})
+            .then((result)=>{
+              let code = 200;
+              if (result.result.docs.length == 0) {
+                  code = 404;
+              }
+              resolve({
+                  statusCode: code,
+                  headers: { 'Content-Type': 'application/json' },
+                  body: result.result.docs
+              });
+            }).catch((err)=>{
+              reject(err);
+            })
+        } else if (params.id) {
+            id = parseInt(params.dealerId)
+            // return dealerships with this ID 
+            cloudant.postFind({
+              db: 'dealerships',
+              selector: {
+                id: parseInt(params.id)
+              }
+            })
+            .then((result)=>{
+              let code = 200;
+              if (result.result.docs.length == 0) {
+                  code = 404;
+              }
+              resolve({
+                  statusCode: code,
+                  headers: { 'Content-Type': 'application/json' },
+                  body: result.result.docs
+              });
+            }).catch((err)=>{
+              reject(err);
+            })
+        } else {
+            // return all documents 
+            cloudant.postAllDocs({ db: 'dealerships', includeDocs: true, limit: 10 })            
+            .then((result)=>{
+              let code = 200;
+              if (result.result.rows.length == 0) {
+                  code = 404;
+              }
+              resolve({
+                  statusCode: code,
+                  headers: { 'Content-Type': 'application/json' },
+                  body: result.result.rows
+              });
+            }).catch((err)=>{
+              reject(err);
+            })
+      }
+    }
+    )}
+
+
+/*------------*/
+
+
+# 2. get-review
+#
+# main() will be run when you invoke this action
+#
+# @param Cloud Functions actions accept a single parameter, which must be a JSON object.
+#
+# @return The output of this action, which must be a JSON object.
+#
+#
+import sys 
+from ibmcloudant.cloudant_v1 import CloudantV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+def main(dict): 
+    authenticator = IAMAuthenticator("J2RjLy7u1b3GXBN60vBfhG3GGlMDLBw3JPcLkmWwhw8w")
+    service = CloudantV1(authenticator=authenticator)
+    service.set_service_url("https://apikey-v2-22twxdon1t9319iaw6qgrevfeeiwmhm9vdwa9msdqq4j:db5288361fe28be9b9d1d707f89e4fad@06013879-1f24-48e4-b698-e8af212d2691-bluemix.cloudantnosqldb.appdomain.cloud")
+    response = service.post_find(
+                db='reviews',
+                selector={'dealership': {'$eq': int(dict['id'])}},
+            ).get_result()
+    try: 
+        # result_by_filter=my_database.get_query_result(selector,raw_result=True) 
+        result= {
+            'headers': {'Content-Type':'application/json'}, 
+            'body': {'data':response} 
+            }        
+        return result
+    except:  
+        return { 
+            'statusCode': 404, 
+            'message': 'Something went wrong'
+            }
+
+/*------------*/
+
+
+# 3. post-review
+#
+# main() will be run when you invoke this action
+#
+# @param Cloud Functions actions accept a single parameter, which must be a JSON object.
+#
+# @return The output of this action, which must be a JSON object.
+#
+#
+import sys
+from ibmcloudant.cloudant_v1 import CloudantV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+def main(dict):
+    authenticator = IAMAuthenticator("J2RjLy7u1b3GXBN60vBfhG3GGlMDLBw3JPcLkmWwhw8w")
+    service = CloudantV1(authenticator=authenticator)
+    service.set_service_url("https://apikey-v2-22twxdon1t9319iaw6qgrevfeeiwmhm9vdwa9msdqq4j:db5288361fe28be9b9d1d707f89e4fad@06013879-1f24-48e4-b698-e8af212d2691-bluemix.cloudantnosqldb.appdomain.cloud")
+    response = service.post_document(db='reviews', document=dict["review"]).get_result()
+    try:
+    # result_by_filter=my_database.get_query_result(selector,raw_result=True)
+        result= {
+        'headers': {'Content-Type':'application/json'},
+        'body': {'data':response}
+        }
+        return result
+    except:
+        return {
+        'statusCode': 404,
+        'message': 'Something went wrong'
+        }
+
+
+
