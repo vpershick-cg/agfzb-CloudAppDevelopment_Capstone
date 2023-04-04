@@ -30,8 +30,11 @@ APPEND_SLASH = True
 ALLOWED_HOSTS = [
     "localhost:8000",
     "localhost",
+    "djangoapp.us-east.cf.appdomain.cloud",
     "https://victoriapers-8000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/"
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://victoriapers-8000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 
 # Application definition
 
