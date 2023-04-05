@@ -104,7 +104,6 @@ def get_dealer_details(request, id):
     
         review_url = "https://us-east.functions.appdomain.cloud/api/v1/web/248065cb-83b1-445f-abcb-b28495febf7b/dealership-package/get-review"
         reviews = get_dealer_reviews_from_cf(review_url, id=id)
-        print(reviews)
         context["reviews"] = reviews
         
         return render(request, 'djangoapp/dealer_details.html', context)
@@ -142,9 +141,11 @@ def add_review(request, id):
             payload["car_make"] = car.make.name
             payload["car_model"] = car.name
             payload["car_year"] = int(car.year.strftime("%Y"))
-
             new_payload = {}
             new_payload["review"] = payload
+            # Note: something is wrong with the payload formatting
+            # Tried json.loads(json.dumps(new_payload)) -> dumps is correct but loads is causing bad formatting, tested in Postman.
+            print("dumps: "+json.dumps(new_payload))
             review_post_url =  "https://us-east.functions.appdomain.cloud/api/v1/web/web-dev_2022_djangoserver-space/dealership-package/post-review"
             post_request(review_post_url, new_payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)

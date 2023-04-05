@@ -14,7 +14,7 @@
     <!--Add review form here -->
         <div class="container-fluid">
             <h3>Add a review about <b>{{dealer.full_name}}</b></h3>
-            <form action="{% url 'djangoapp:add_review' dealer.id%}" method="post">
+            <form action="{% url 'djangoapp:add_review' dealer.id %}" method="post">
                 <div class="form-group">
         
                     <div class="mb-3">
@@ -41,7 +41,7 @@
         
                     <div class="mb-3">
                         <label for="purchasedate"><b>Select Your Purchase Date: </b></label>
-                        <input class="date-own form-control" style="width: 300px;" type="text" name="purchasedate" id="purchasedate">
+                        <input class="date-own form-control" style="width: 300px;" type="date" name="purchasedate" id="purchasedate">
                     </div>
         
                 </div>

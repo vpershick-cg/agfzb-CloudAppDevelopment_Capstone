@@ -55,11 +55,9 @@
             </div>
             {% endfor %}
         </div>
-        <button class="btn btn-primary" href="##">Add Your Review</button>
-        <!-- 
-            url 'djangoapp:add_review dealer.id
-        -->
-
+        <a href="{% url 'djangoapp:add_review' dealer.id %}">
+            <button class="btn btn-primary">Add Your Review</button>
+        </a>
     </body>
 
 </html>

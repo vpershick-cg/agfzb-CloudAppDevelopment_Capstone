@@ -39,9 +39,7 @@ class CarModel(models.Model):
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(null=False, max_length=50, default='car model')
     id = models.IntegerField(default=1, primary_key=True)
-    model_type = models.CharField(
-        null=False, max_length=50, choices=MODEL_TYPES, default=SEDAN
-    )
+    model_type = models.CharField(null=False, max_length=50, choices=MODEL_TYPES, default=SEDAN)
     year = models.DateField(default=now)
     
     def __str__(self):
